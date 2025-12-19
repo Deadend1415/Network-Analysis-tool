@@ -1,4 +1,5 @@
 from ping3 import ping
+from logger import log_results  # import the function from logger.py
 
 ROUTER_IP = "192.168.0.1"
 PUBLIC_IP = "8.8.8.8"
@@ -40,3 +41,7 @@ for target in targets:
     }
     print(target, ":", results[target])
 #end for
+
+# Call the logger
+log_results(results)
+print("Ping results logged.")
