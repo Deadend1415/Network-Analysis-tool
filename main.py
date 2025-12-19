@@ -1,25 +1,42 @@
-""" from ping3 import ping
-from datetime import datetime
-import statistics
+from ping3 import ping
 
 ROUTER_IP = "192.168.0.1"
-LOG_FILE = "router_ping.csv"
-PING_COUNT = 5
+PUBLIC_IP = "8.8.8.8"
+LAN_DEVICES = ["192.168.0.46","192.168.0.98","192.168.0.174","192.168.0.97","192.168.0.163","192.168.0.237","192.168.0.122","192.168.0.16"]
 TIMEOUT = 2  # seconds
+PING_COUNT = 15
+LOG_FILE = "router_ping.csv"
 
-timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-latencies = []
+# Combine all targets into one list
+targets = [ROUTER_IP] + [PUBLIC_IP]
 
-for _ in range(PING_COUNT):
-    delay = ping(ROUTER_IP, timeout=TIMEOUT, unit="ms")
-    if delay is not None:
-        latencies.append(delay)
+# Add only the first 3 LAN devices that respond
+count = 0
+for device in LAN_DEVICES:
 
-with open(LOG_FILE, "a") as f:
-    if latencies:
-        avg = round(statistics.mean(latencies), 2)
-        f.write(f"{timestamp},{ROUTER_IP},{avg}\n")
-    else:
-        f.write(f"{timestamp},{ROUTER_IP},FAIL\n")
- """
-print("Hello world")
+    if ping(device, timeout=TIMEOUT, unit="ms"): # only non-false, non-zero values
+        targets.append(device)
+        count += 1
+        
+    if count >= 3:
+        break
+
+# Dictionary to hold results
+results = {}
+
+for target in targets:
+    probes = []
+    for _ in range(PING_COUNT):
+        delay = ping(target, timeout=TIMEOUT, unit="ms")
+        probes.append(delay)
+        #end for
+        
+    #probes for the target have been filled  
+    
+    results[target] = {
+        "min": round(min(probes), 2),
+        "max": round(max(probes), 2),
+        "avg": round(sum(probes) / len(probes), 2)
+    }
+    print(target, ":", results[target])
+#end for
