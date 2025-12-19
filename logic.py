@@ -1,12 +1,19 @@
 from ping3 import ping
 from logger import log_results  # import the function from logger.py
+import configparser
 
-ROUTER_IP = "192.168.0.1"
-PUBLIC_IP = "8.8.8.8"
-LAN_DEVICES = ["192.168.0.46","192.168.0.98","192.168.0.174","192.168.0.97","192.168.0.163","192.168.0.237","192.168.0.122","192.168.0.16"]
-TIMEOUT = 2  # seconds
-PING_COUNT = 15
-LOG_FILE = "router_ping.csv"
+# Load config
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+# Network
+ROUTER_IP = config.get("NETWORK", "ROUTER_IP")
+LAN_DEVICES = [ip.strip() for ip in config.get("NETWORK", "LAN_DEVICES").split(",")]
+PING_COUNT = config.getint("NETWORK", "PING_COUNT")
+TIMEOUT = config.getint("NETWORK", "TIMEOUT")
+
+# Logging
+LOG_DIR = config.get("LOGGING", "LOG_DIR")
 
 # Combine all targets into one list
 targets = [ROUTER_IP] + [PUBLIC_IP]
