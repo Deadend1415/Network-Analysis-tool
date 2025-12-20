@@ -8,12 +8,13 @@ config.read("config.ini")
 
 # Network
 ROUTER_IP = config.get("NETWORK", "ROUTER_IP")
+PUBLIC_IP = config.get("NETWORK", "PUBLIC_IP")
 LAN_DEVICES = [ip.strip() for ip in config.get("NETWORK", "LAN_DEVICES").split(",")]
 PING_COUNT = config.getint("NETWORK", "PING_COUNT")
 TIMEOUT = config.getint("NETWORK", "TIMEOUT")
 
 # Logging
-LOG_DIR = config.get("LOGGING", "LOG_DIR")
+LOG_DIR = config.get("LOGGING", "LOG_FILE")
 
 # Combine all targets into one list
 targets = [ROUTER_IP] + [PUBLIC_IP]
