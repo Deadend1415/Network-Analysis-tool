@@ -2,6 +2,8 @@
 REM Change to the script directory
 cd /d "C:\Users\Corso Robotica\Documents\Network-Analysis-tool"
 
+echo Do not close...
+
 REM Check if the scheduled task exists
 schtasks /Query /TN "PingTool-v9" >nul 2>&1
 if %ERRORLEVEL% neq 0 (
