@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 df = pd.read_csv("ping_log.csv",
-                 names=["timestamp","ip","min","max","avg","std","count","failed"])
+                 names=["timestamp","ip","min","max","avg"])
 df["timestamp"] = pd.to_datetime(df["timestamp"])
 
 for ip in df["ip"].unique():
