@@ -52,4 +52,4 @@ for target in targets:
 
 # Call the logger
 log_results(results)
-print("Ping results logged.")
+print("Ping results logged")
