@@ -1,21 +1,29 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("ping_log.csv",
-                 names=["timestamp","ip","min","max","avg"])
-df["timestamp"] = pd.to_datetime(df["timestamp"], format="%d-%m-%Y %H:%M:%S")
+# Load CSV
+df = pd.read_csv(
+    "ping_log.csv",
+    header=None,
+    names=["time", "ip", "min", "max", "avg"],
+    parse_dates=["time"],
+    dayfirst=True
+)
 
-plt.figure(figsize=(12,6))  # make plot bigger
-for ip in df["ip"].unique():
-    device_data = df[df["ip"] == ip]
-    plt.plot(device_data["timestamp"], device_data["avg"], label=ip)
+df = df.sort_values("time")
 
-plt.xlabel("Time")
-plt.ylabel("Average Ping (ms)")
-plt.title("Ping Over Time")
-plt.legend()
+metrics = ["min", "max", "avg"]
 
-# Improve x-axis formatting
-plt.gcf().autofmt_xdate()  # rotates dates nicely
-plt.show()
+for metric in metrics:
+    plt.figure()
 
+    for ip, group in df.groupby("ip"):
+        plt.plot(group["time"], group[metric], label=ip)
+
+    plt.title(f"{metric.upper()} latency over time by IP")
+    plt.xlabel("Time")
+    plt.ylabel("Latency (ms)")
+    plt.legend(fontsize="small", ncol=2)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
